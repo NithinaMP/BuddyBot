@@ -9,22 +9,22 @@ def chatbot_response(message):
     # Greetings
     if "hello" in message or "hi" in message or "hey" in message:
         responses = [
-            "Hello! How can I help you?",
-            "Hi there! What's up?",
-            "Hey! Nice to meet you!"
+            "Hello! I'm BuddyBot, here to chat with you!",
+            "Hi there! What's on your mind today?",
+            "Hey! Great to see you 😊"
         ]
         return random.choice(responses)
     
     # Name
     elif "your name" in message or "who are you" in message:
-        return "I'm a chatbot built with Flask!"
+        return "I'm BuddyBot, your friendly Flask-powered assistant! 🤖"
     
     # How are you
-    elif "how are you" in message:
+    elif "how are you" in message or "how r u" in message:
         responses = [
             "I'm doing great! Thanks for asking!",
-            "I'm good! How about you?",
-            "Pretty good! Just chatting away!"
+            "Fantastic as always! How about you?",
+            "Pretty good! I'm here and ready to chat!"
         ]
         return random.choice(responses)
     
@@ -33,25 +33,39 @@ def chatbot_response(message):
         jokes = [
             "Why don't programmers like nature? Too many bugs! 🐞",
             "Why do Java developers wear glasses? Because they don't C#! 👓",
-            "What's a programmer's favorite place? The Foo Bar! 🍺"
+            "What's a programmer's favorite place? The Foo Bar! 🍺",
+            "Why did the developer quit? Because they didn't get arrays! 😄"
         ]
         return random.choice(jokes)
     
     # Python
     elif "python" in message:
-        return "Python is an amazing programming language! 🐍"
+        return "Python is an awesome language! Easy to learn and super powerful 🐍"
     
     # Flask
     elif "flask" in message:
-        return "Flask is a lightweight Python web framework! 🌐"
+        return "Flask is a lightweight Python web framework. Perfect for projects like this! 🌐"
+    
+    # Help
+    elif "help" in message:
+        return "I can chat, tell jokes, answer questions about Python/Flask, and more! Just ask!"
+    
+    # Thanks
+    elif "thank" in message:
+        return "You're welcome! Happy to help 😊"
     
     # Bye
-    elif "bye" in message or "goodbye" in message:
-        return "Goodbye! Have a nice day! 👋"
+    elif "bye" in message or "goodbye" in message or "see you" in message:
+        responses = [
+            "Goodbye! Have an amazing day 😊",
+            "See you later! Take care! 👋",
+            "Bye! Come chat anytime 🌟"
+        ]
+        return random.choice(responses)
     
     # Default
     else:
-        return "Sorry, I didn't understand that. Try asking something else!"
+        return "Hmm, I'm not sure about that. Try asking something else! 🤔"
 
 @app.route("/")
 def index():
