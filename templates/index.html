@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatBot</title>
+    <title>BuddyBot</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -13,16 +13,19 @@
         <div class="bot-info">
             <div class="bot-avatar">🤖</div>
             <div>
-                <h2>ChatBot</h2>
+                <h2>BuddyBot</h2>
                 <span class="status">Online</span>
             </div>
         </div>
+        <button onclick="clearChat()" class="clear-btn">Clear</button>
     </div>
 
-    <div id="chat-box" class="chat-box"></div>
+    <div id="chat-box" class="chat-box">
+        <div class='bot-message'>Hey! I'm BuddyBot. How can I help you today? 👋</div>
+    </div>
 
     <div class="input-area">
-        <input type="text" id="user-input" placeholder="Type your message here...">
+        <input type="text" id="user-input" placeholder="Type your message here..." onkeypress="handleKeyPress(event)">
         <button onclick="sendMessage()">Send</button>
     </div>
 </div>
@@ -40,7 +43,7 @@ function sendMessage() {
     fetch("/get", {
         method: "POST",
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: "message=" + message
+        body: "message=" + encodeURIComponent(message)
     })
     .then(response => response.json())
     .then(data => {
@@ -49,6 +52,17 @@ function sendMessage() {
     });
     
     input.value = "";
+}
+
+function handleKeyPress(event) {
+    if (event.key === "Enter") {
+        sendMessage();
+    }
+}
+
+function clearChat() {
+    let chatBox = document.getElementById("chat-box");
+    chatBox.innerHTML = `<div class='bot-message'>Chat cleared! How can I help you? 😊</div>`;
 }
 </script>
 
