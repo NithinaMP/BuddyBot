@@ -21,6 +21,9 @@ body {
     background: #2c3e50;
     color: white;
     padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .bot-info {
@@ -56,6 +59,23 @@ body {
     font-weight: 500;
 }
 
+.clear-btn {
+    background: #5eead4;
+    border: none;
+    color: #2c3e50;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.clear-btn:hover {
+    background: #4dd4bd;
+    transform: scale(1.05);
+}
+
 .chat-box {
     height: 400px;
     overflow-y: scroll;
@@ -81,6 +101,7 @@ body {
     text-align: right;
     border-radius: 18px 18px 5px 18px;
     font-size: 15px;
+    animation: slideInRight 0.3s ease;
 }
 
 .bot-message {
@@ -93,6 +114,35 @@ body {
     border-radius: 18px 18px 18px 5px;
     border: 2px solid #5eead4;
     font-size: 15px;
+    animation: slideInLeft 0.3s ease;
+}
+
+.bot-message.typing {
+    background: #e8f5f3;
+    font-style: italic;
+    color: #5eead4;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .input-area {
@@ -127,8 +177,10 @@ button {
     cursor: pointer;
     font-size: 15px;
     font-weight: 600;
+    transition: all 0.3s;
 }
 
 button:hover {
     background: #34495e;
+    transform: scale(1.05);
 }
