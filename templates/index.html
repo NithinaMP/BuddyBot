@@ -21,7 +21,7 @@
     </div>
 
     <div id="chat-box" class="chat-box">
-        <div class='bot-message'>Hey! I'm BuddyBot. How can I help you today? 👋</div>
+        <div class='bot-message'>Hey! I'm BuddyBot 👋 Type "help" to see what I can do!</div>
     </div>
 
     <div class="input-area">
@@ -38,7 +38,11 @@ function sendMessage() {
     if (message === "") return;
     
     let chatBox = document.getElementById("chat-box");
-    chatBox.innerHTML += `<div class='user-message'>${message}</div>`;
+    chatBox.innerHTML += `<div class='user-message'>${escapeHtml(message)}</div>`;
+    
+    // Show typing indicator
+    chatBox.innerHTML += `<div class='bot-message typing' id='typing'>Typing...</div>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
     
     fetch("/get", {
         method: "POST",
@@ -47,8 +51,15 @@ function sendMessage() {
     })
     .then(response => response.json())
     .then(data => {
-        chatBox.innerHTML += `<div class='bot-message'>${data.reply}</div>`;
+        // Remove typing indicator
+        document.getElementById('typing').remove();
+        
+        chatBox.innerHTML += `<div class='bot-message'>${escapeHtml(data.reply)}</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
+    })
+    .catch(error => {
+        document.getElementById('typing').remove();
+        chatBox.innerHTML += `<div class='bot-message'>Oops! Something went wrong.</div>`;
     });
     
     input.value = "";
@@ -63,6 +74,17 @@ function handleKeyPress(event) {
 function clearChat() {
     let chatBox = document.getElementById("chat-box");
     chatBox.innerHTML = `<div class='bot-message'>Chat cleared! How can I help you? 😊</div>`;
+}
+
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
 }
 </script>
 
