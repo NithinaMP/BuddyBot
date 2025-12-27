@@ -3,79 +3,94 @@ import random
 
 app = Flask(__name__)
 
+# Responses database for better organization
+RESPONSES = {
+    'greetings': [
+        "Hello! I'm BuddyBot, here to chat with you!",
+        "Hi there! What's on your mind today?",
+        "Hey! Great to see you 😊"
+    ],
+    'how_are_you': [
+        "I'm doing great! Thanks for asking 😊",
+        "Fantastic as always! How about you?",
+        "Pretty good! I'm here and ready to chat 💬"
+    ],
+    'jokes': [
+        "Why don't programmers like nature? Too many bugs! 🐞",
+        "Why do Java developers wear glasses? Because they don't C#! 👓",
+        "What's a programmer's favorite hangout? The Foo Bar! 🍺",
+        "Why did the developer quit? Because they didn't get arrays! 😄"
+    ],
+    'goodbye': [
+        "Goodbye! Have an amazing day 😊",
+        "See you later! Take care! 👋",
+        "Bye! Come chat anytime 🌟"
+    ],
+    'fallback': [
+        "Hmm, I'm not sure about that. Try asking something else! 🤔",
+        "That's interesting! But I don't have an answer yet.",
+        "I don't know how to respond to that. Type 'help' to see what I can do!"
+    ]
+}
+
 def chatbot_response(message):
-    message = message.lower()
+    """Process user message and return appropriate response."""
+    message = message.lower().strip()
     
     # Greetings
-    if "hello" in message or "hi" in message or "hey" in message:
-        responses = [
-            "Hello! I'm BuddyBot, here to chat with you!",
-            "Hi there! What's on your mind today?",
-            "Hey! Great to see you 😊"
-        ]
-        return random.choice(responses)
-    
-    # Name
-    elif "your name" in message or "who are you" in message:
+    if any(word in message for word in ["hello", "hi", "hey", "greetings"]):
+        return random.choice(RESPONSES['greetings'])
+
+    # Identity questions
+    elif any(phrase in message for phrase in ["your name", "who are you"]):
         return "I'm BuddyBot, your friendly Flask-powered assistant! 🤖"
-    
-    # How are you
-    elif "how are you" in message or "how r u" in message:
-        responses = [
-            "I'm doing great! Thanks for asking!",
-            "Fantastic as always! How about you?",
-            "Pretty good! I'm here and ready to chat!"
-        ]
-        return random.choice(responses)
-    
+
+    # Status check
+    elif any(phrase in message for phrase in ["how are you", "how r u"]):
+        return random.choice(RESPONSES['how_are_you'])
+
     # Jokes
-    elif "joke" in message or "funny" in message:
-        jokes = [
-            "Why don't programmers like nature? Too many bugs! 🐞",
-            "Why do Java developers wear glasses? Because they don't C#! 👓",
-            "What's a programmer's favorite place? The Foo Bar! 🍺",
-            "Why did the developer quit? Because they didn't get arrays! 😄"
-        ]
-        return random.choice(jokes)
-    
-    # Python
+    elif any(word in message for word in ["joke", "funny"]):
+        return random.choice(RESPONSES['jokes'])
+
+    # Python related
     elif "python" in message:
         return "Python is an awesome language! Easy to learn and super powerful 🐍"
-    
-    # Flask
+
+    # Flask related
     elif "flask" in message:
         return "Flask is a lightweight Python web framework. Perfect for projects like this! 🌐"
-    
+
     # Help
-    elif "help" in message:
-        return "I can chat, tell jokes, answer questions about Python/Flask, and more! Just ask!"
-    
+    elif "help" in message or "what can you do" in message:
+        return "I can chat, tell jokes, answer questions about Python/Flask, and more! Just ask away! 💬"
+
     # Thanks
     elif "thank" in message:
         return "You're welcome! Happy to help 😊"
-    
-    # Bye
-    elif "bye" in message or "goodbye" in message or "see you" in message:
-        responses = [
-            "Goodbye! Have an amazing day 😊",
-            "See you later! Take care! 👋",
-            "Bye! Come chat anytime 🌟"
-        ]
-        return random.choice(responses)
-    
-    # Default
+
+    # Goodbye
+    elif any(word in message for word in ["bye", "goodbye", "see you"]):
+        return random.choice(RESPONSES['goodbye'])
+
+    # Default fallback
     else:
-        return "Hmm, I'm not sure about that. Try asking something else! 🤔"
+        return random.choice(RESPONSES['fallback'])
+
 
 @app.route("/")
 def index():
+    """Render the main chat interface."""
     return render_template("index.html")
+
 
 @app.route("/get", methods=["POST"])
 def get_bot_response():
+    """Handle POST request to get bot response."""
     user_message = request.form["message"]
     response = chatbot_response(user_message)
     return jsonify({"reply": response})
+
 
 if __name__ == "__main__":
     app.run(debug=True)
