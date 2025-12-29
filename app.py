@@ -3,7 +3,7 @@ import random
 
 app = Flask(__name__)
 
-# Responses database for better organization
+# Responses database
 RESPONSES = {
     'greetings': [
         "Hello! I'm BuddyBot, here to chat with you!",
@@ -36,6 +36,10 @@ RESPONSES = {
 def chatbot_response(message):
     """Process user message and return appropriate response."""
     message = message.lower().strip()
+    
+    # Empty message check
+    if not message:
+        return "Please type something! I'm here to chat 😊"
     
     # Greetings
     if any(word in message for word in ["hello", "hi", "hey", "greetings"]):
@@ -87,10 +91,30 @@ def index():
 @app.route("/get", methods=["POST"])
 def get_bot_response():
     """Handle POST request to get bot response."""
-    user_message = request.form["message"]
-    response = chatbot_response(user_message)
-    return jsonify({"reply": response})
+    try:
+        user_message = request.form.get("message", "").strip()
+        
+        if not user_message:
+            return jsonify({"reply": "Please type a message!"}), 400
+        
+        response = chatbot_response(user_message)
+        return jsonify({"reply": response})
+    
+    except Exception as e:
+        return jsonify({"reply": "Sorry, something went wrong! Please try again."}), 500
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    """Handle 404 errors."""
+    return render_template("index.html"), 404
+
+
+@app.errorhandler(500)
+def internal_error(e):
+    """Handle 500 errors."""
+    return jsonify({"error": "Internal server error"}), 500
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='127.0.0.1', port=5000)
